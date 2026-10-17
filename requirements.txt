@@ -10,3 +10,4 @@ langgraph-checkpoint-postgres
 mcp[cli]>=1.10.1
 mcp==1.30.0
 langchain-mcp-adapters==0.3.2
+aviationstack-mcp

@@ -1,8 +1,10 @@
 import os
 import sys
+import shutil
 import config
 from dotenv import load_dotenv
 from langchain_mcp_adapters.client import MultiServerMCPClient
+
 
 load_dotenv()
 
@@ -39,8 +41,13 @@ aviation_client = MultiServerMCPClient(
     {
         "aviationstack": {
             "transport": "stdio",
-            "command": "uvx",
-            "args": ["aviationstack-mcp"],
+            "command": sys.executable,
+            "args": [
+                "-m",
+                "aviationstack_mcp",
+                "mcp",
+                "run",
+            ],
             "env": {
                 "AVIATION_STACK_API_KEY": AVIATION_STACK_API_KEY,
             },

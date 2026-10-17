@@ -1,5 +1,7 @@
+import os
+import traceback
 import uuid
-import os 
+
 import streamlit as st
 from langchain_core.messages import HumanMessage
 from langgraph.types import Command
@@ -7,7 +9,7 @@ from langgraph.types import Command
 for k in ["GROQ_API_KEY", "TAVILY_API_KEY", "AVIATIONSTACK_API_KEY", "OPENWEATHER_API_KEY", "DATABASE_URL"]:
     if k in st.secrets:
         os.environ[k] = str(st.secrets[k]).strip()
-        
+
 from graph import app
 
 st.set_page_config(
@@ -215,11 +217,18 @@ def start_new_thread():
     st.session_state.thread_id = f"{st.session_state.user_id}_{uuid.uuid4().hex[:8]}"
     st.session_state.pop("waiting_for_approval", None)
     st.session_state.pop("latest_result", None)
+    st.session_state.pop("last_error", None)
 
 
 def new_plan():
     start_new_thread()
     st.session_state.query = ""
+
+
+def show_error(tb: str):
+    """Error ko status box ke BAHAR dikhata hai taaki saaf dikhe."""
+    st.error(t["error"])
+    st.code(tb, language="text")
 
 
 # ---------------------------------------------------------------------------
@@ -297,6 +306,7 @@ if stage == 1:
             st.warning(t["warn_empty"])
         else:
             new_result = None
+            error_tb = None
             with st.status(t["working"], expanded=False) as status:
                 try:
                     new_result = app.invoke(
@@ -316,9 +326,13 @@ if stage == 1:
                         config=config,
                     )
                     status.update(label=t["done"], state="complete")
-                except Exception as e:  # noqa: BLE001
+                except Exception:  # noqa: BLE001
+                    error_tb = traceback.format_exc()
+                    print(error_tb)  # Manage app -> logs me bhi dikhega
                     status.update(label=t["error"], state="error")
-                    st.error(f"{t['error']}: {e}")
+
+            if error_tb:
+                show_error(error_tb)
 
             if new_result is not None:
                 st.session_state.latest_result = new_result
@@ -381,6 +395,7 @@ if stage == 2:
 
     if submit_clicked:
         final_result = None
+        error_tb = None
         with st.status(t["finalizing"], expanded=False) as status:
             try:
                 final_result = app.invoke(
@@ -388,9 +403,13 @@ if stage == 2:
                     config=config,
                 )
                 status.update(label=t["done"], state="complete")
-            except Exception as e:  # noqa: BLE001
+            except Exception:  # noqa: BLE001
+                error_tb = traceback.format_exc()
+                print(error_tb)
                 status.update(label=t["error"], state="error")
-                st.error(f"{t['error']}: {e}")
+
+        if error_tb:
+            show_error(error_tb)
 
         if final_result is not None:
             st.session_state.latest_result = final_result

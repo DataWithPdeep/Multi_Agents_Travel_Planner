@@ -1,15 +1,16 @@
 import os
 import sys
-
+import config
 from dotenv import load_dotenv
 from langchain_mcp_adapters.client import MultiServerMCPClient
 
 load_dotenv()
 
 
-TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
-AVIATION_STACK_API_KEY = os.getenv("AVIATIONSTACK_API_KEY")
-OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
+TAVILY_API_KEY = (os.getenv("TAVILY_API_KEY") or "").strip()
+print("Tavily key starts with:", repr(TAVILY_API_KEY[:5]), "| length:", len(TAVILY_API_KEY))
+AVIATION_STACK_API_KEY = (os.getenv("AVIATIONSTACK_API_KEY") or "").strip()
+OPENWEATHER_API_KEY = (os.getenv("OPENWEATHER_API_KEY") or "").strip()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 WEATHER_MCP_PATH = os.path.join(BASE_DIR, "custom_mcp.py")

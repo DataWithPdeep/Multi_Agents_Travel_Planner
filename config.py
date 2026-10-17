@@ -34,3 +34,6 @@ def get_llm():
         model=get_secret("GROQ_MODEL", "openai/gpt-oss-120b"),
         api_key=os.getenv("GROQ_API_KEY"),
     )
+
+from urllib.parse import urlparse
+print("DB host:", urlparse(DATABASE_URL).hostname if DATABASE_URL else None)

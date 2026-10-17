@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI यात्रा योजनाकार</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Noto+Sans+Devanagari:wght@500;700;800&display=swap">
+<style>
+:root{--bg:#f3f5ff;--tx:#111827;--mu:#5b6478;--cd:rgba(255,255,255,.74);--st:rgba(99,102,241,.2);--a1:#6366f1;--a2:#ec4899;--a3:#f59e0b;--ok:#10b981;--bl:.55;--in:rgba(99,102,241,.07);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#070a1c;--tx:#eef0ff;--mu:#9aa3c7;--cd:rgba(22,27,58,.64);--st:rgba(255,255,255,.1);--bl:.42;--in:rgba(255,255,255,.05);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#070a1c;--tx:#eef0ff;--mu:#9aa3c7;--cd:rgba(22,27,58,.64);--st:rgba(255,255,255,.1);--bl:.42;--in:rgba(255,255,255,.05);color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:500 16px/1.65 "Plus Jakarta Sans","Noto Sans Devanagari",system-ui,sans-serif;overflow-x:hidden}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.bg i{position:absolute;border-radius:50%;filter:blur(90px);opacity:var(--bl);animation:fl 16s ease-in-out infinite alternate}
+.bg i:nth-child(1){width:46vmax;height:46vmax;background:var(--a1);top:-14vmax;left:-10vmax}
+.bg i:nth-child(2){width:40vmax;height:40vmax;background:var(--a2);top:20vh;right:-14vmax;animation-delay:-5s}
+.bg i:nth-child(3){width:34vmax;height:34vmax;background:var(--a3);bottom:-14vmax;left:22vw;animation-delay:-9s}
+@keyframes fl{to{transform:translate(6vmax,5vmax) scale(1.15)}}
+.w{max-width:1080px;margin:auto;padding:18px 18px 70px}
+nav{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.logo{font-weight:800;font-size:1.1rem;display:flex;gap:8px;align-items:center}
+.logo b{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,var(--a1),var(--a2));box-shadow:0 8px 20px -6px var(--a1)}
+.nv{display:flex;gap:8px}
+.pill{border:1px solid var(--st);background:var(--cd);color:var(--tx);border-radius:999px;padding:8px 14px;font:700 .85rem inherit;font-family:inherit;cursor:pointer;backdrop-filter:blur(12px);transition:.2s}
+.pill:hover{transform:translateY(-2px);border-color:var(--a1)}
+.lg{display:flex;padding:3px}.lg span{padding:5px 12px;border-radius:999px;font-weight:700;font-size:.85rem;cursor:pointer;color:var(--mu)}
+.lg span.on{background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff}
+.hero{text-align:center;padding:44px 0 26px}
+.badge{display:inline-block;padding:6px 14px;border-radius:999px;font-size:.8rem;font-weight:700;border:1px solid var(--st);background:var(--cd);color:var(--a1);margin-bottom:18px}
+h1{font-size:clamp(2.1rem,6.4vw,4rem);line-height:1.15;margin:0 0 14px;font-weight:800;letter-spacing:-.02em}
+h1 em{font-style:normal;background:linear-gradient(90deg,var(--a1),var(--a2),var(--a3),var(--a1));background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 6s linear infinite}
+@keyframes sh{to{background-position:250% 0}}
+.sub{color:var(--mu);max-width:620px;margin:0 auto;font-size:1.05rem}
+.g{background:var(--cd);border:1px solid var(--st);border-radius:24px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 24px 60px -28px rgba(80,70,200,.45)}
+.sc{padding:20px;margin-top:28px;position:relative}
+.sc::before{content:"";position:absolute;inset:-1.5px;border-radius:25px;padding:1.5px;background:linear-gradient(120deg,var(--a1),var(--a2),var(--a3),var(--a1));background-size:300% 100%;animation:sh 7s linear infinite;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.8;pointer-events:none}
+textarea{width:100%;min-height:104px;resize:vertical;border:1px solid var(--st);background:var(--in);color:var(--tx);border-radius:16px;padding:14px 16px;font:inherit;outline:none;transition:.2s}
+textarea:focus{border-color:var(--a1);box-shadow:0 0 0 4px rgba(99,102,241,.18)}
+.ch{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 16px}
+.ch button{border:1px dashed var(--st);background:transparent;color:var(--mu);border-radius:999px;padding:6px 13px;font:600 .82rem inherit;font-family:inherit;cursor:pointer;transition:.2s}
+.ch button:hover{color:var(--a1);border-color:var(--a1);transform:translateY(-2px)}
+.go{width:100%;border:0;border-radius:16px;padding:16px;font:800 1.05rem inherit;font-family:inherit;color:#fff;cursor:pointer;background:linear-gradient(120deg,var(--a1),var(--a2) 60%,var(--a3));background-size:200% 100%;box-shadow:0 14px 30px -10px var(--a2);transition:.3s}
+.go:hover{background-position:100% 0;transform:translateY(-3px)}.go:disabled{opacity:.6;cursor:wait;transform:none}
+.warn{color:var(--a2);font-weight:700;font-size:.88rem;min-height:1.3em;margin:8px 0 0}
+.steps{display:flex;gap:10px;margin:30px 0 18px}
+.st{flex:1;text-align:center;padding:10px 8px;border-radius:14px;font-weight:700;font-size:.88rem;border:1px solid var(--st);background:var(--cd);color:var(--mu);transition:.4s}
+.st.on{color:var(--a1);border-color:var(--a1);box-shadow:0 8px 24px -10px var(--a1)}
+.st.dn{color:var(--ok);border-color:var(--ok)}
+.ag{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.a{padding:16px;border-radius:20px;text-align:center;position:relative;transition:.4s}
+.a .ic{font-size:1.8rem;display:block;margin-bottom:4px}
+.a small{display:block;color:var(--mu);font-weight:600;font-size:.78rem}
+.a.on{border-color:var(--a1);transform:translateY(-5px);box-shadow:0 0 0 4px rgba(99,102,241,.18),0 18px 40px -16px var(--a1);animation:pu 1s infinite}
+.a.on small{color:var(--a1)}.a.dn{border-color:var(--ok)}.a.dn small{color:var(--ok)}
+.a.dn::after{content:"✓";position:absolute;top:8px;right:12px;color:var(--ok);font-weight:800}
+@keyframes pu{50%{box-shadow:0 0 0 9px rgba(99,102,241,.05),0 18px 40px -16px var(--a1)}}
+.bar{height:6px;border-radius:9px;background:var(--in);margin:16px 0 0;overflow:hidden}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a1),var(--a2),var(--a3));transition:width .6s}
+.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:22px 0 14px}
+.stat div{padding:16px 18px;border-radius:20px}
+.stat small{color:var(--mu);font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}
+.stat b{display:block;font-size:1.3rem;font-weight:800}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
+.tabs button{flex:none;border:1px solid var(--st);background:var(--cd);color:var(--mu);border-radius:999px;padding:9px 17px;font:700 .9rem inherit;font-family:inherit;cursor:pointer;transition:.2s}
+.tabs button.on{color:#fff;background:linear-gradient(120deg,var(--a1),var(--a2));border-color:transparent;box-shadow:0 10px 22px -10px var(--a1)}
+.pn{padding:22px;animation:up .5s both}
+@keyframes up{from{opacity:0;transform:translateY(16px)}}
+.tl{position:relative;margin:0;padding:0 0 0 26px;list-style:none}
+.tl::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--a1),var(--a2),var(--a3))}
+.tl li{position:relative;margin-bottom:18px}.tl li:last-child{margin:0}
+.tl li::before{content:"";position:absolute;left:-26px;top:6px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:3px solid var(--a1)}
+.tl b{display:block}.tl span{color:var(--mu)}
+.row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px 16px;border-radius:16px;background:var(--in);margin-bottom:10px;flex-wrap:wrap}
+.row b{display:block}.row span{color:var(--mu);font-size:.88rem}.row em{font-style:normal;font-weight:800;color:var(--a1);font-size:1.05rem}
+.wx{display:flex;gap:22px;align-items:center;flex-wrap:wrap}.wx .t{font-size:3.6rem;font-weight:800;line-height:1}
+.dn2{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.dnt{width:190px;height:190px;border-radius:50%;display:grid;place-items:center;flex:none}
+.dnt div{width:122px;height:122px;border-radius:50%;background:var(--bg);display:grid;place-items:center;text-align:center;font-weight:800;line-height:1.2}
+.dnt small{display:block;color:var(--mu);font-weight:600;font-size:.72rem}
+.lgd{flex:1;min-width:200px}.lgd p{display:flex;justify-content:space-between;margin:6px 0;gap:10px}.lgd p span::before{content:"";display:inline-block;width:11px;height:11px;border-radius:4px;background:var(--c);margin-right:8px}
+.ap{padding:22px;margin-top:20px}.ap h3,.fn h3{margin:0 0 4px;font-size:1.25rem}
+.bt{display:flex;gap:10px;margin:14px 0;flex-wrap:wrap}.bt button{flex:1;min-width:140px;border:1px solid var(--st);background:var(--in);color:var(--tx);border-radius:14px;padding:13px;font:800 .95rem inherit;font-family:inherit;cursor:pointer;transition:.2s}
+.bt button.on{background:linear-gradient(120deg,var(--a1),var(--a2));color:#fff;border-color:transparent}
+.fn{padding:26px;margin-top:20px;border-color:var(--ok)}
+.fn .tl li::before{border-color:var(--ok)}
+.act{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}.act .pill{flex:1;min-width:150px;padding:13px}
+.note{margin-top:14px;padding:12px 16px;border-radius:14px;background:var(--in);color:var(--mu);font-size:.88rem;border-left:4px solid var(--a3)}
+.demo{text-align:center;color:var(--mu);font-size:.8rem;margin-top:34px}
+[hidden]{display:none!important}
+@media(max-width:600px){.hero{padding-top:28px}.steps{gap:6px}.st{font-size:.72rem;padding:9px 4px}.dnt{margin:auto}.pn,.sc{padding:16px}}
+@media(prefers-reduced-motion:reduce){*,::before{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bg"><i></i><i></i><i></i></div>
+<div class="w">
+<nav>
+ <div class="logo"><b>🧳</b><span data-i="brand"></span></div>
+ <div class="nv">
+  <button class="pill" id="th" aria-label="Theme">🌗</button>
+  <div class="pill lg"><span data-l="hi" class="on">हिंदी</span><span data-l="en">EN</span></div>
+ </div>
+</nav>
+
+<header class="hero">
+ <div class="badge" data-i="badge"></div>
+ <h1><span data-i="h1a"></span> <em data-i="h1b"></em></h1>
+ <p class="sub" data-i="sub"></p>
+</header>
+
+<section class="g sc" id="inp">
+ <textarea id="q" data-ph="ph"></textarea>
+ <div class="ch" id="ch"></div>
+ <button class="go" id="go" data-i="go"></button>
+ <p class="warn" id="wn"></p>
+</section>
+
+<div class="steps" id="steps"></div>
+
+<section id="agw" hidden>
+ <div class="ag" id="ag"></div>
+ <div class="bar"><i id="pb"></i></div>
+</section>
+
+<section id="res" hidden>
+ <div class="stat" id="stat"></div>
+ <div class="tabs" id="tabs"></div>
+ <div class="g pn" id="pn"></div>
+</section>
+
+<section class="g ap" id="ap" hidden>
+ <h3 data-i="apT"></h3><span style="color:var(--mu)" data-i="apQ"></span>
+ <div class="bt"><button id="by" class="on" data-i="yes"></button><button id="bn" data-i="no"></button></div>
+ <textarea id="fb" style="min-height:76px" data-ph="fb" hidden></textarea>
+ <button class="go" id="sd" style="margin-top:12px" data-i="send"></button>
+</section>
+
+<section class="g fn" id="fn" hidden>
+ <h3 data-i="finT"></h3>
+ <p style="color:var(--mu);margin:0 0 18px" id="fs"></p>
+ <ul class="tl" id="ft"></ul>
+ <div class="act"><button class="pill" id="cp"></button><button class="pill" id="ag2" data-i="again"></button></div>
+</section>
+
+<p class="demo" data-i="demo"></p>
+</div>
+
+<script>
+const L={
+hi:{brand:"यात्रा AI",badge:"✨ 6 AI एजेंट · एक यात्रा",h1a:"सपनों की यात्रा,",h1b:"अब मिनटों में प्लान",sub:"फ्लाइट, होटल, मौसम और बजट. सब कुछ AI एजेंटों की टीम आपके लिए तैयार करती है।",
+ph:"जैसे: 7 दिन की जापान यात्रा, बजट 2 लाख रुपये तक, सस्ते होटल और रात की फ्लाइट नहीं।",
+ex:["7 दिन जापान, बजट 2 लाख","दिल्ली से गोवा, 4 दिन","परिवार के साथ मनाली"],go:"🚀 ड्राफ्ट प्लान बनाएं",warn:"पहले अपनी यात्रा का अनुरोध लिखें।",
+s:["1 · अनुरोध","2 · समीक्षा","3 · अंतिम योजना"],ag:["सुपरवाइज़र","फ्लाइट","होटल","मौसम","बजट","कार्यक्रम"],st:["प्रतीक्षा","काम जारी…","पूरा"],
+tabs:["📝 कार्यक्रम","✈️ फ्लाइट","🏨 होटल","☁️ मौसम","💰 बजट"],d:"गंतव्य",u:"अवधि",b:"बजट",
+apT:"✅ आपकी मंज़ूरी",apQ:"क्या आप इस ड्राफ्ट को मंज़ूर करते हैं?",yes:"हाँ, मंज़ूर है",no:"नहीं, बदलाव करें",fb:"आप क्या बदलना चाहेंगे?",send:"📨 भेजें",
+finT:"🎉 आपकी अंतिम यात्रा योजना",copy:"📋 योजना कॉपी करें",copied:"✅ कॉपी हो गई",again:"➕ नई यात्रा",
+rev:"आपके सुझाव के अनुसार कार्यक्रम अपडेट किया गया:",night:"/रात",wx:"आज का मौसम",tip:"हल्की जैकेट और आरामदायक जूते रखें।",tot:"कुल बजट",
+demo:"डेमो डेटा · असली योजना के लिए इसे अपने LangGraph बैकएंड से जोड़ें"},
+en:{brand:"Yatra AI",badge:"✨ 6 AI agents · one trip",h1a:"Dream trips,",h1b:"planned in minutes",sub:"Flights, hotels, weather and budget. A team of AI agents prepares it all for you.",
+ph:"e.g. 7-day Japan trip under Rs. 2 lakh, budget hotels, no overnight flights.",
+ex:["7 days Japan, 2 lakh","Delhi to Goa, 4 days","Family trip to Manali"],go:"🚀 Create Draft Plan",warn:"Enter a travel request first.",
+s:["1 · Request","2 · Review","3 · Final plan"],ag:["Supervisor","Flights","Hotels","Weather","Budget","Itinerary"],st:["Waiting","Working…","Done"],
+tabs:["📝 Itinerary","✈️ Flights","🏨 Hotels","☁️ Weather","💰 Budget"],d:"Destination",u:"Duration",b:"Budget",
+apT:"✅ Your approval",apQ:"Do you approve this draft?",yes:"Yes, approve",no:"No, revise it",fb:"What would you like to change?",send:"📨 Submit",
+finT:"🎉 Your final travel plan",copy:"📋 Copy plan",copied:"✅ Copied",again:"➕ Plan another trip",
+rev:"Itinerary updated with your feedback:",night:"/night",wx:"Weather now",tip:"Pack a light jacket and comfortable shoes.",tot:"Total budget",
+demo:"Demo data · connect this UI to your LangGraph backend for real plans"}};
+const D={
+hi:{dest:"जापान (टोक्यो–क्योटो)",dur:"7 दिन",days:[["दिन 1 · टोक्यो पहुँचना","सुबह की फ्लाइट, शिंजुकू में चेक-इन और शाम को शिबुया क्रॉसिंग।"],["दिन 2 · टोक्यो दर्शन","असाकुसा का सेंसो-जी मंदिर, उएनो पार्क और अकिहाबारा।"],["दिन 3 · माउंट फ़ूजी","कावागुचिको झील से फ़ूजी का नज़ारा, शाम को ऑनसेन।"],["दिन 4 · क्योटो","शिंकानसेन से क्योटो और फ़ुशिमी इनारी के तोरी गेट।"],["दिन 5-6 · क्योटो और नारा","किन्काकुजी, अरशियामा बाँस वन और नारा के हिरन।"],["दिन 7 · वापसी","ओसाका से दिल्ली की दिन की फ्लाइट।"]],
+ fl:[["DEL → NRT","Air India · 9 घं 30 मि · सीधी उड़ान","₹48,000"],["KIX → DEL","दिन की फ्लाइट · 1 स्टॉप","₹14,500"]],
+ ho:[["Shinjuku Budget Inn","टोक्यो · 3 रात",5500],["Kyoto Machiya Stay","क्योटो · 3 रात",6800],["Osaka Capsule Plus","ओसाका · 1 रात",3200]],
+ wx:["18°C","आंशिक बादल · हल्की ठंडक"],bl:["फ्लाइट","होटल","खाना","ट्रांसपोर्ट","घूमना","आपातकाल"]},
+en:{dest:"Japan (Tokyo–Kyoto)",dur:"7 days",days:[["Day 1 · Arrive in Tokyo","Morning flight, check in at Shinjuku, evening at Shibuya Crossing."],["Day 2 · Tokyo highlights","Senso-ji temple in Asakusa, Ueno Park and Akihabara."],["Day 3 · Mount Fuji","Lake Kawaguchiko views of Fuji, evening onsen."],["Day 4 · Kyoto","Shinkansen to Kyoto and the Fushimi Inari torii gates."],["Day 5-6 · Kyoto and Nara","Kinkaku-ji, Arashiyama bamboo grove and Nara deer."],["Day 7 · Return","Daytime flight from Osaka to Delhi."]],
+ fl:[["DEL → NRT","Air India · 9h 30m · non-stop","₹48,000"],["KIX → DEL","Daytime flight · 1 stop","₹14,500"]],
+ ho:[["Shinjuku Budget Inn","Tokyo · 3 nights",5500],["Kyoto Machiya Stay","Kyoto · 3 nights",6800],["Osaka Capsule Plus","Osaka · 1 night",3200]],
+ wx:["18°C","Partly cloudy · mild and cool"],bl:["Flights","Hotels","Food","Transport","Sightseeing","Buffer"]}};
+const B=[48000,62000,30000,28000,20000,12000],C=["#6366f1","#ec4899","#f59e0b","#10b981","#06b6d4","#a78bfa"],IC=["🧭","✈️","🏨","☁️","💰","📝"];
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const S={l:"hi",stage:1,tab:0,res:false,done:false,ok:true,note:""};
+const inr=n=>"₹"+n.toLocaleString("en-IN");
+function T(k){return L[S.l][k]}
+
+function lang(){
+ const x=L[S.l];document.documentElement.lang=S.l==="hi"?"hi":"en";document.title=x.brand;
+ $$("[data-i]").forEach(e=>e.textContent=x[e.dataset.i]);
+ $$("[data-ph]").forEach(e=>e.placeholder=x[e.dataset.ph]);
+ $$("[data-l]").forEach(e=>e.classList.toggle("on",e.dataset.l===S.l));
+ $("#ch").innerHTML=x.ex.map((t,i)=>`<button data-x="${i}">${t}</button>`).join("");
+ $("#cp").textContent=x.copy;
+ steps();agents();if(S.res)results();if(S.done)final();
+}
+function steps(){$("#steps").innerHTML=T("s").map((t,i)=>`<div class="st ${i+1<S.stage?"dn":i+1===S.stage?"on":""}">${t}</div>`).join("")}
+function agents(st){
+ st=st||S.ag||[];S.ag=st;
+ $("#ag").innerHTML=T("ag").map((n,i)=>{const s=st[i]||0;return`<div class="g a ${s===1?"on":s===2?"dn":""}"><span class="ic">${IC[i]}</span><b>${n}</b><small>${T("st")[s]}</small></div>`}).join("");
+ $("#pb").style.width=(st.filter(v=>v===2).length/6*100)+"%";
+}
+function tl(days){return days.map(d=>`<li><b>${d[0]}</b><span>${d[1]}</span></li>`).join("")}
+function results(){
+ const x=L[S.l],d=D[S.l],tot=B.reduce((a,b)=>a+b,0);
+ $("#stat").innerHTML=[[x.d,d.dest],[x.u,d.dur],[x.b,inr(tot)]].map(r=>`<div class="g"><small>${r[0]}</small><b>${r[1]}</b></div>`).join("");
+ $("#tabs").innerHTML=x.tabs.map((t,i)=>`<button class="${i===S.tab?"on":""}" data-t="${i}">${t}</button>`).join("");
+ let h="";
+ if(S.tab===0)h=`<ul class="tl">${tl(d.days)}</ul>`+(S.note?`<div class="note"><b>${x.rev}</b> <span id="nt"></span></div>`:"");
+ if(S.tab===1)h=d.fl.map(f=>`<div class="row"><div><b>${f[0]}</b><span>${f[1]}</span></div><em>${f[2]}</em></div>`).join("");
+ if(S.tab===2)h=d.ho.map(f=>`<div class="row"><div><b>${f[0]}</b><span>${f[1]}</span></div><em>${inr(f[2])}${x.night}</em></div>`).join("");
+ if(S.tab===3)h=`<div class="wx"><div class="t">${d.wx[0]}</div><div><b>${x.wx}</b><br><span style="color:var(--mu)">${d.wx[1]}</span><br><span style="color:var(--mu)">💡 ${x.tip}</span></div></div>`;
+ if(S.tab===4){let a=0;const g=B.map((v,i)=>{const s=a;a+=v/tot*100;return`${C[i]} ${s}% ${a}%`}).join(",");
+  h=`<div class="dn2"><div class="dnt" style="background:conic-gradient(${g})"><div><span>${inr(tot)}<small>${x.tot}</small></span></div></div><div class="lgd">${d.bl.map((n,i)=>`<p style="--c:${C[i]}"><span>${n}</span><b>${inr(B[i])}</b></p>`).join("")}</div></div>`}
+ const p=$("#pn");p.innerHTML=h;p.style.animation="none";p.offsetWidth;p.style.animation="";
+ if(S.note&&$("#nt"))$("#nt").textContent=S.note;
+}
+function final(){
+ const d=D[S.l],tot=B.reduce((a,b)=>a+b,0);
+ $("#fs").textContent=`${d.dest} · ${d.dur} · ${inr(tot)}`;
+ $("#ft").innerHTML=tl(d.days);
+}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+async function run(only){
+ const st=only?S.ag.slice():[0,0,0,0,0,0];
+ for(const i of (only?[5]:[0,1,2,3,4,5])){st[i]=1;agents(st);await wait(only?900:700);st[i]=2;agents(st)}
+}
+$("#ch").onclick=e=>{const b=e.target.closest("button");if(b)$("#q").value=L[S.l].ex[b.dataset.x]};
+$("#go").onclick=async()=>{
+ if(!$("#q").value.trim()){$("#wn").textContent=T("warn");return}
+ $("#wn").textContent="";$("#go").disabled=true;$("#agw").hidden=false;
+ $("#agw").scrollIntoView({block:"center"});
+ await run();
+ S.res=true;S.stage=2;steps();results();$("#res").hidden=false;$("#ap").hidden=false;$("#go").disabled=false;
+ $("#res").scrollIntoView({block:"start"});
+};
+$("#tabs").onclick=e=>{const b=e.target.closest("button");if(b){S.tab=+b.dataset.t;results()}};
+$("#by").onclick=()=>{S.ok=true;$("#by").classList.add("on");$("#bn").classList.remove("on");$("#fb").hidden=true};
+$("#bn").onclick=()=>{S.ok=false;$("#bn").classList.add("on");$("#by").classList.remove("on");$("#fb").hidden=false;$("#fb").focus()};
+$("#sd").onclick=async()=>{
+ if(S.ok){S.done=true;S.stage=3;steps();final();$("#ap").hidden=true;$("#fn").hidden=false;$("#fn").scrollIntoView({block:"start"});return}
+ S.note=$("#fb").value.trim()||"—";S.tab=0;$("#sd").disabled=true;await run(true);$("#sd").disabled=false;results();$("#res").scrollIntoView({block:"start"});
+};
+$("#cp").onclick=async()=>{
+ const d=D[S.l],t=d.dest+" · "+d.dur+"\n\n"+d.days.map(x=>x[0]+": "+x[1]).join("\n");
+ try{await navigator.clipboard.writeText(t);$("#cp").textContent=T("copied");setTimeout(()=>$("#cp").textContent=T("copy"),1800)}catch(e){}
+};
+$("#ag2").onclick=()=>{Object.assign(S,{stage:1,res:false,done:false,ok:true,note:"",tab:0,ag:[]});
+ ["#agw","#res","#ap","#fn"].forEach(s=>$(s).hidden=true);$("#q").value="";$("#fb").value="";$("#by").click();lang();scrollTo({top:0})};
+$$("[data-l]").forEach(e=>e.onclick=()=>{S.l=e.dataset.l;lang()});
+$("#th").onclick=()=>{const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"};
+lang();
+</script>
+</body>
+</html>

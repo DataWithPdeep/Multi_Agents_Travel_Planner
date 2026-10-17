@@ -1,9 +1,13 @@
 import uuid
-
+import os 
 import streamlit as st
 from langchain_core.messages import HumanMessage
 from langgraph.types import Command
 
+for k in ["GROQ_API_KEY", "TAVILY_API_KEY", "AVIATIONSTACK_API_KEY", "OPENWEATHER_API_KEY", "DATABASE_URL"]:
+    if k in st.secrets:
+        os.environ[k] = str(st.secrets[k]).strip()
+        
 from graph import app
 
 st.set_page_config(
